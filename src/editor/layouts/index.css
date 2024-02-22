@@ -1,0 +1,36 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  min-height: 800px;
+}
+
+.header-wrap {
+  display: flex;
+  align-items: center;
+  height: 50px;
+  background-color: #fafafa;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.container {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+
+  .material-wrap {
+    width: 300px;
+    border-right: 1px solid #e0e0e0;
+  }
+
+  .stage-wrap {
+    flex: 1;
+    position: relative;
+    overflow: auto;
+  }
+
+  .setting-wrap {
+    width: 300px;
+    border-left: 1px solid #e0e0e0;
+  }
+}
