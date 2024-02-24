@@ -1,7 +1,6 @@
 import { Column } from '@ant-design/charts';
-import type { ColumnConfig } from '@ant-design/charts';
 
-export const DemoColumn = (props: ColumnConfig) => {
+export const DemoColumn = () => {
   const data = [
     {
       type: '家具家电',
