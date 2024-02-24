@@ -5,6 +5,7 @@
     width: 1920px;
     height: 1080px;
     position: relative;
+    z-index: 0;
   }
 
   .canvas-bg {
