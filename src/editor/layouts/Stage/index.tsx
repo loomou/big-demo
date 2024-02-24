@@ -1,7 +1,7 @@
 import './index.css';
 import type { DragEvent, ReactNode } from 'react';
 import { CanvasBG } from './CanvasBG.tsx';
-import { useState, createElement, useRef } from 'react';
+import { useState, createElement } from 'react';
 import { Slider } from 'antd';
 import { useComponents } from '../../stores/components.ts';
 import { BButton } from '../../components/BButton';
@@ -27,7 +27,6 @@ export const Stage = () => {
   // const currentComponent = useComponents((state) => state.currentComponent);
   const { currentComponent, components, addComponent, setCurrentComponent } = useComponents();
   const [canvasScale, setScale] = useState(1);
-  const canvasWrap = useRef(null);
   
   const changeScale = (value: number) => {
     setScale(value / 100);
@@ -39,7 +38,6 @@ export const Stage = () => {
   
   const onDrop = (e: DragEvent) => {
     e.preventDefault();
-    console.log(e);
     const stageWrap = document.getElementsByClassName('stage-wrap');
     const scrollTop = stageWrap[0].scrollTop;
     const scrollLeft = stageWrap[0].scrollLeft;
@@ -57,11 +55,10 @@ export const Stage = () => {
   
   return (
     <>
-      <div className="canvas-wrap" ref={ canvasWrap }>
+      <div className="canvas-wrap">
         <div className="canvas"
              style={ {
                transform: `scale(${ canvasScale }, ${ canvasScale })`,
-               transformOrigin: '0 0'
              } }
              onDragOver={ onDragOver }
              onDrop={ onDrop }
@@ -76,26 +73,13 @@ export const Stage = () => {
                 left: component?.position?.left
               } }>
               { renderComponents(component) }
-              <div style={ {
-                position: 'absolute',
-                top: 0,
-                bottom: 0,
-                left: 0,
-                right: 0,
-                zIndex: 1
-              } }></div>
+              <div className="component-mask"></div>
             </div>;
           }) }
         </div>
-        <div style={ {
-          width: '100px',
-          position: 'fixed',
-          right: '320px',
-          bottom: '20px',
-          zIndex: '10'
-        } }>
-          <Slider defaultValue={ canvasScale * 100 } max={ 200 } onChange={ changeScale }/>
-        </div>
+      </div>
+      <div className="slider-wrap">
+        <Slider defaultValue={ canvasScale * 100 } max={ 200 } onChange={ changeScale }/>
       </div>
     </>
   );

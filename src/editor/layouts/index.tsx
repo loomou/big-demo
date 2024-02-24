@@ -6,18 +6,18 @@ import { Setting } from './setting';
 
 export const Layouts = () => {
   return (
-    <div className='main'>
-      <div className='header-wrap'>
+    <div className="main">
+      <div className="header-wrap">
         <Header/>
       </div>
-      <div className='container'>
-        <div className='material-wrap'>
+      <div className="container">
+        <div className="material-wrap">
           <Material/>
         </div>
-        <div className='stage-wrap'>
+        <div className="stage-wrap">
           <Stage/>
         </div>
-        <div className='setting-wrap'>
+        <div className="setting-wrap">
           <Setting/>
         </div>
       </div>

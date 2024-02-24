@@ -11,14 +11,18 @@ export const ComponentsList = () => {
   };
   
   return (
-    <div style={ {
-      display: 'flex'
-    } }>
+    <div className='material-list'>
       { components.map((component) => {
         return (
-          <div key={ component.name } draggable onDragStart={ () => onDragStart(component) }>
+          <div className="component-item-wrap"
+               key={ component.name }
+               draggable
+               onDragStart={ () => onDragStart(component) }
+          >
             <Card size="small">
-              { component.name }
+              <div className='component-name-wrap'>
+                { component.name }
+              </div>
             </Card>
           </div>
         );

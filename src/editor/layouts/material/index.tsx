@@ -15,7 +15,7 @@ export const Material = () => {
         options={ ['组件', '图层'] }
         onChange={ setKey }
       />
-      <div className="segmented-item">
+      <div className="material-list-wrap">
         {
           key === '组件' ? <ComponentsList/> : <Layer/>
         }

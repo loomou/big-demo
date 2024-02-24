@@ -1,5 +1,21 @@
 .material {
-  .segmented-item {
+  .material-list-wrap {
     padding: 20px;
   }
+}
+
+.component-item-wrap {
+  cursor: grab;
+}
+
+.material-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+}
+
+.component-name-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
