@@ -1,16 +1,10 @@
 import './index.css';
 import type { DragEvent, ReactNode } from 'react';
-import { CanvasBG } from './CanvasBG.tsx';
 import { useState, createElement } from 'react';
+import { CanvasBG } from './CanvasBG.tsx';
 import { Slider } from 'antd';
 import { useComponents } from '../../stores/components.ts';
-import { BButton } from '../../components/BButton';
-import { DemoColumn } from '../../components/BChart';
-
-const ComponentMap: { [key: string]: any } = {
-  Button: BButton,
-  Column: DemoColumn
-};
+import { ComponentMap } from '../../components';
 
 const renderComponents = (component: Component): ReactNode => {
   if (!component) {
@@ -24,8 +18,7 @@ const renderComponents = (component: Component): ReactNode => {
 };
 
 export const Stage = () => {
-  // const currentComponent = useComponents((state) => state.currentComponent);
-  const { currentComponent, components, addComponent, setCurrentComponent } = useComponents();
+  const { currentComponent, components, addComponent, setCurrentComponent, setCurrentComponentId } = useComponents();
   const [canvasScale, setScale] = useState(1);
   
   const changeScale = (value: number) => {
@@ -62,20 +55,28 @@ export const Stage = () => {
              } }
              onDragOver={ onDragOver }
              onDrop={ onDrop }
+             onClick={ () => setCurrentComponentId(null) }
         >
           <CanvasBG/>
-          { components.map((component, index) => {
-            return <div
-              key={ index }
-              style={ {
-                position: 'absolute',
-                top: component?.position?.top,
-                left: component?.position?.left
-              } }>
-              { renderComponents(component) }
-              <div className="component-mask"></div>
-            </div>;
-          }) }
+          {
+            components.map((component) => {
+              return <div
+                key={ component.id }
+                style={ {
+                  position: 'absolute',
+                  top: component?.position?.top,
+                  left: component?.position?.left
+                } }
+                onClick={ (e) => {
+                  e.stopPropagation()
+                  setCurrentComponentId(component.id);
+                } }
+              >
+                { renderComponents(component) }
+                {/*<div className="component-mask"></div>*/ }
+              </div>;
+            })
+          }
         </div>
       </div>
       <div className="slider-wrap">

@@ -2,16 +2,16 @@ export const components: Component[] = [
   {
     id: 1,
     name: 'Button',
-    props: {
-      type: 'primary',
-      children: '按钮',
-    },
+    props: {},
   },
   {
     id: 2,
     name: 'Column',
-    props: {
-    
-    }
+    props: {}
   },
+  {
+    id: 3,
+    name: 'Select',
+    props: {}
+  }
 ];

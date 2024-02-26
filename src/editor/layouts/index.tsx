@@ -1,7 +1,7 @@
 import './index.css';
 import { Header } from './header';
 import { Material } from './material';
-import { Stage } from './Stage';
+import { Stage } from './stage';
 import { Setting } from './setting';
 
 export const Layouts = () => {
