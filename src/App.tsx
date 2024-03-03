@@ -1,9 +1,10 @@
-import { Layouts } from './editor/layouts';
+import { RouterProvider } from 'react-router-dom';
+import router from './router';
 
 function App() {
   return (
-    <Layouts />
-  )
+    <RouterProvider router={ router }/>
+  );
 }
 
-export default App
+export default App;

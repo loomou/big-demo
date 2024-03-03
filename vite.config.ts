@@ -14,7 +14,7 @@ export default defineConfig({
       output: {
         manualChunks: {
           'lodash-es': ['lodash-es'],
-          'react': ['react', 'react-dom'],
+          'react': ['react', 'react-dom', 'react-router-dom'],
           '@ant-design/charts': ['@ant-design/charts']
         }
       }
