@@ -1,8 +1,13 @@
 import type { ButtonProps } from 'antd';
 import { Button as AntdButton } from 'antd';
+import { memo } from 'react';
 
-export const BButton = (props: ButtonProps) => {
+interface BButtonProps extends ButtonProps {
+  text: string;
+}
+
+export const BButton = memo((props: BButtonProps) => {
   return (
-    <AntdButton { ...props }>{ props.name }</AntdButton>
+    <AntdButton { ...props }>{ props.text }</AntdButton>
   );
-};
+});

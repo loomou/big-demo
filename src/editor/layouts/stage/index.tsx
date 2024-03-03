@@ -46,6 +46,16 @@ export const Stage = () => {
     setCurrentComponent(null);
   };
   
+  const setCurrent = (id: number) => {
+    setCurrentComponentId(id);
+    setCurrentComponent(components.find((component) => component.id === id) || null);
+  };
+  
+  const clearCurrent = () => {
+    setCurrentComponent(null);
+    setCurrentComponentId(null);
+  };
+  
   return (
     <>
       <div className="canvas-wrap">
@@ -55,7 +65,7 @@ export const Stage = () => {
              } }
              onDragOver={ onDragOver }
              onDrop={ onDrop }
-             onClick={ () => setCurrentComponentId(null) }
+             onClick={ clearCurrent }
         >
           <CanvasBG/>
           {
@@ -68,8 +78,8 @@ export const Stage = () => {
                   left: component?.position?.left
                 } }
                 onClick={ (e) => {
-                  e.stopPropagation()
-                  setCurrentComponentId(component.id);
+                  e.stopPropagation();
+                  setCurrent(component.id);
                 } }
               >
                 { renderComponents(component) }

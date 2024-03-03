@@ -1,13 +1,12 @@
 import { components } from '../../../mock/data.ts';
 import { Card } from 'antd';
 import { useComponents } from '../../stores/components.ts';
-import { cloneDeep } from 'lodash-es';
 
 export const ComponentsList = () => {
   const { setCurrentComponent } = useComponents();
   
   const onDragStart = (component: Component) => {
-    setCurrentComponent(cloneDeep(component));
+    setCurrentComponent(component);
   };
   
   return (

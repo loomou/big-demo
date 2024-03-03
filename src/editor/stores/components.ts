@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 import { DefaultPropsMap } from '../components';
+import { transformToLink } from '../../utils';
+import { cloneDeep } from 'lodash-es';
 
 interface Position {
   top: number;
@@ -41,6 +43,7 @@ interface Action {
    * @returns
    */
   addComponent: (component: Component) => void;
+  updateComponentProps: (props: any) => void;
 }
 
 export const useComponents = create<State & Action>((set) => ({
@@ -65,6 +68,23 @@ export const useComponents = create<State & Action>((set) => ({
         id: Date.now()
       };
       return { components: [...state.components, component] };
+    });
+  },
+  updateComponentProps: (props) => {
+    set((state) => {
+      if (state.currentComponent) {
+        const key = Object.keys(props)[0];
+        const currentProps = cloneDeep(state.currentComponent.props);
+        if (key.includes('.')) {
+          props = transformToLink(key.split('.'), currentProps, props[key]);
+        }
+        state.currentComponent.props = {
+          ...state.currentComponent.props,
+          ...props
+        };
+      }
+      console.log(state.components);
+      return { components: [...state.components] };
     });
   }
 }));
