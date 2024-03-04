@@ -5,6 +5,7 @@ import { CanvasBG } from './CanvasBG.tsx';
 import { Slider } from 'antd';
 import { useComponents } from '../../stores/components.ts';
 import { ComponentMap } from '../../components';
+import { Draggable } from '../../../components/Draggable';
 
 const renderComponents = (component: Component): ReactNode => {
   if (!component) {
@@ -18,7 +19,14 @@ const renderComponents = (component: Component): ReactNode => {
 };
 
 export const Stage = () => {
-  const { currentComponent, components, addComponent, setCurrentComponent, setCurrentComponentId } = useComponents();
+  const {
+    currentComponent,
+    components,
+    addComponent,
+    setCurrentComponent,
+    setCurrentComponentId,
+    updateComponentPosition
+  } = useComponents();
   const [canvasScale, setScale] = useState(1);
   
   const changeScale = (value: number) => {
@@ -31,7 +39,7 @@ export const Stage = () => {
   
   const onDrop = (e: DragEvent) => {
     e.preventDefault();
-    const stageWrap = document.getElementsByClassName('stage-wrap');
+    const stageWrap = document.getElementsByClassName('canvas-wrap');
     const scrollTop = stageWrap[0].scrollTop;
     const scrollLeft = stageWrap[0].scrollLeft;
     const endLeft = (e.clientX - 300 + scrollLeft) / canvasScale;
@@ -60,6 +68,7 @@ export const Stage = () => {
     <>
       <div className="canvas-wrap">
         <div className="canvas"
+             id="canvas"
              style={ {
                transform: `scale(${ canvasScale }, ${ canvasScale })`,
              } }
@@ -70,21 +79,28 @@ export const Stage = () => {
           <CanvasBG/>
           {
             components.map((component) => {
-              return <div
-                key={ component.id }
-                style={ {
-                  position: 'absolute',
-                  top: component?.position?.top,
-                  left: component?.position?.left
-                } }
-                onClick={ (e) => {
-                  e.stopPropagation();
-                  setCurrent(component.id);
-                } }
-              >
-                { renderComponents(component) }
-                {/*<div className="component-mask"></div>*/ }
-              </div>;
+              const initPosition = {
+                top: component?.position?.top || 0,
+                left: component?.position?.left || 0
+              };
+              return (
+                <Draggable
+                  key={ component.id }
+                  initPosition={ initPosition }
+                  parent={'canvas-wrap'}
+                  scale={canvasScale}
+                  id={component.id}
+                  mouseUp={updateComponentPosition}
+                >
+                  <div onClick={ (e) => {
+                    e.stopPropagation();
+                    setCurrent(component.id);
+                  } }>
+                    { renderComponents(component) }
+                  </div>
+                  {/*<div className="component-mask"></div>*/ }
+                </Draggable>
+              );
             })
           }
         </div>

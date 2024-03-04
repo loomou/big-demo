@@ -18,8 +18,6 @@ export const Preview = () => {
   const preview = localStorage.getItem('preview');
   const components: Component[] = preview ? JSON.parse(preview) : [];
   
-  console.log(components);
-  
   return (
     <div className="preview-container">
       {

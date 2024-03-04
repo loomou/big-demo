@@ -44,6 +44,7 @@ interface Action {
    */
   addComponent: (component: Component) => void;
   updateComponentProps: (props: any) => void;
+  updateComponentPosition: (id: number, position: { left: number, top: number }) => void;
 }
 
 export const useComponents = create<State & Action>((set) => ({
@@ -83,7 +84,15 @@ export const useComponents = create<State & Action>((set) => ({
           ...props
         };
       }
-      console.log(state.components);
+      return { components: [...state.components] };
+    });
+  },
+  updateComponentPosition: (id, position) => {
+    set((state) => {
+      const component = state.components.find((item) => item.id === id);
+      if (component) {
+        component.position = { ...position };
+      }
       return { components: [...state.components] };
     });
   }
