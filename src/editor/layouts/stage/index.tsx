@@ -1,11 +1,12 @@
 import './index.css';
 import type { DragEvent, ReactNode } from 'react';
-import { useState, createElement } from 'react';
+import { useState, createElement, Suspense } from 'react';
 import { CanvasBG } from './CanvasBG.tsx';
 import { Slider } from 'antd';
 import { useComponents } from '../../stores/components.ts';
 import { ComponentMap } from '../../components';
 import { Draggable } from '../../../components/Draggable';
+import { ErrorBoundary } from "react-error-boundary";
 
 const renderComponents = (component: Component): ReactNode => {
   if (!component) {
@@ -96,7 +97,11 @@ export const Stage = () => {
                     e.stopPropagation();
                     setCurrent(component.id);
                   } }>
-                    { renderComponents(component) }
+                    <ErrorBoundary fallback={<div>error</div>}>
+                      <Suspense fallback={<div>...loading</div>}>
+                        { renderComponents(component) }
+                      </Suspense>
+                    </ErrorBoundary>
                   </div>
                   {/*<div className="component-mask"></div>*/ }
                 </Draggable>

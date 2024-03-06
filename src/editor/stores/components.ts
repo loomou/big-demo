@@ -20,12 +20,13 @@ export interface Component {
   /**
    * 组件属性
    */
-  props: any;
+  props?: any;
   /**
    * 子组件
    */
   children?: Component[];
   position?: Position;
+  isRemote?: boolean;
 }
 
 interface State {

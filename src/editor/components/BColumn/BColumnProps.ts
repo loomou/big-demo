@@ -10,7 +10,6 @@ const BColumnProps = [
     name: 'label.position',
     label: '标签位置',
     type: 'select',
-    // defaultValue: 'inside',
     options: [
       {
         label: '顶部',

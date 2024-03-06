@@ -16,25 +16,19 @@ export function parseObj(obj: any, preKey: string = '', res: Res = {}) {
 }
 
 export function transformToLink(arr: string[], props: any, val: string | number | boolean) {
-  // let head = {};
-  // let tmp: {
-  //   [key: string]: any
-  // } = head;
-  
   let tmp = props;
   
   for (let i = 0; i < arr.length; i++) {
     let cur = arr[i];
     let next = arr[i + 1];
     if (next) {
-      // let o = {};
-      // tmp[cur] = o;
-      // tmp = o;
       tmp = props[cur];
     } else {
       tmp[cur] = val;
     }
   }
-  // return head;
   return props;
 }
+
+
+
