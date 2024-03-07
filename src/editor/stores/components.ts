@@ -46,6 +46,7 @@ interface Action {
   addComponent: (component: Component) => void;
   updateComponentProps: (props: any) => void;
   updateComponentPosition: (id: number, position: { left: number, top: number }) => void;
+  updateLayer: (startId: number, overId: number) => void;
 }
 
 export const useComponents = create<State & Action>((set) => ({
@@ -93,6 +94,23 @@ export const useComponents = create<State & Action>((set) => ({
       const component = state.components.find((item) => item.id === id);
       if (component) {
         component.position = { ...position };
+      }
+      return { components: [...state.components] };
+    });
+  },
+  updateLayer: (startId, overId) => {
+    set((state) => {
+      const startIndex = state.components.findIndex((item) => item.id === startId);
+      const overIndex = state.components.findIndex((item) => item.id === overId);
+      if (startIndex > -1 && overIndex > -1) {
+        if (overIndex > startIndex) {
+          state.components.splice(overIndex + 1, 0, state.components[startIndex]);
+          state.components.splice(startIndex, 1);
+        }
+        if (overIndex < startIndex) {
+          state.components.splice(overIndex, 0, state.components[startIndex]);
+          state.components.splice(startIndex + 1, 1);
+        }
       }
       return { components: [...state.components] };
     });

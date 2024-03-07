@@ -6,7 +6,7 @@ import { Slider } from 'antd';
 import { useComponents } from '../../stores/components.ts';
 import { ComponentMap } from '../../components';
 import { Draggable } from '../../../components/Draggable';
-import { ErrorBoundary } from "react-error-boundary";
+import { ErrorBoundary } from 'react-error-boundary';
 
 const renderComponents = (component: Component): ReactNode => {
   if (!component) {
@@ -40,18 +40,19 @@ export const Stage = () => {
   
   const onDrop = (e: DragEvent) => {
     e.preventDefault();
+    if (currentComponent === null || currentComponent.props) {
+      return;
+    }
     const stageWrap = document.getElementsByClassName('canvas-wrap');
     const scrollTop = stageWrap[0].scrollTop;
     const scrollLeft = stageWrap[0].scrollLeft;
     const endLeft = (e.clientX - 300 + scrollLeft) / canvasScale;
     const endTop = (e.clientY - 50 + scrollTop) / canvasScale;
-    if (currentComponent !== null) {
-      currentComponent.position = {
-        top: endTop,
-        left: endLeft
-      };
-      addComponent(currentComponent);
-    }
+    currentComponent.position = {
+      top: endTop,
+      left: endLeft
+    };
+    addComponent(currentComponent);
     setCurrentComponent(null);
   };
   
@@ -88,17 +89,17 @@ export const Stage = () => {
                 <Draggable
                   key={ component.id }
                   initPosition={ initPosition }
-                  parent={'canvas-wrap'}
-                  scale={canvasScale}
-                  id={component.id}
-                  mouseUp={updateComponentPosition}
+                  parent={ 'canvas-wrap' }
+                  scale={ canvasScale }
+                  id={ component.id }
+                  mouseUp={ updateComponentPosition }
                 >
                   <div onClick={ (e) => {
                     e.stopPropagation();
                     setCurrent(component.id);
                   } }>
-                    <ErrorBoundary fallback={<div>error</div>}>
-                      <Suspense fallback={<div>...loading</div>}>
+                    <ErrorBoundary fallback={ <div>error</div> }>
+                      <Suspense fallback={ <div>...loading</div> }>
                         { renderComponents(component) }
                       </Suspense>
                     </ErrorBoundary>
