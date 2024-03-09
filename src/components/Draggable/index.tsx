@@ -2,7 +2,8 @@ import type { MouseEvent as ReactMouseEvent, ReactNode } from 'react';
 import { useRef, useState } from 'react';
 
 interface DraggableProps {
-  initPosition: { left: number; top: number; };
+  left: number;
+  top: number;
   parent: string;
   scale: number;
   id: number;
@@ -11,8 +12,16 @@ interface DraggableProps {
 }
 
 export const Draggable = (props: DraggableProps) => {
-  const { children, initPosition, parent, scale, id, mouseUp } = props;
-  const [position, setPosition] = useState({ ...initPosition });
+  const {
+    children,
+    parent,
+    scale,
+    id,
+    mouseUp,
+    left,
+    top
+  } = props;
+  const [position, setPosition] = useState({ left, top });
   const draggableRef = useRef<HTMLDivElement>(null);
   
   const onMouseDown = (e: ReactMouseEvent) => {
@@ -62,7 +71,7 @@ export const Draggable = (props: DraggableProps) => {
       mouseUp && mouseUp(id, {
         left: moveLeft,
         top: moveTop
-      })
+      });
     };
     
     if (canvas) {

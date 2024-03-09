@@ -9,6 +9,7 @@ import { Draggable } from '../../../components/Draggable';
 import { ErrorBoundary } from 'react-error-boundary';
 
 const renderComponents = (component: Component): ReactNode => {
+  console.log('component:', component);
   if (!component) {
     return null;
   }
@@ -81,14 +82,11 @@ export const Stage = () => {
           <CanvasBG/>
           {
             components.map((component) => {
-              const initPosition = {
-                top: component?.position?.top || 0,
-                left: component?.position?.left || 0
-              };
               return (
                 <Draggable
                   key={ component.id }
-                  initPosition={ initPosition }
+                  left={ component?.position?.left || 0 }
+                  top={ component?.position?.top || 0 }
                   parent={ 'canvas-wrap' }
                   scale={ canvasScale }
                   id={ component.id }
