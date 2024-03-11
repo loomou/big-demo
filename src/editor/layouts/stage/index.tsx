@@ -9,7 +9,6 @@ import { Draggable } from '../../../components/Draggable';
 import { ErrorBoundary } from 'react-error-boundary';
 
 const renderComponents = (component: Component): ReactNode => {
-  console.log('component:', component);
   if (!component) {
     return null;
   }

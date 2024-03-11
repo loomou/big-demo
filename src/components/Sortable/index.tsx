@@ -3,13 +3,14 @@ import { useRef } from 'react';
 
 interface SortableProps {
   update: (startId: number, overId: number) => void;
+  dragEnd: (component?: Component[]) => Promise<void>;
   children: ReactNode;
 }
 
 export const Sortable = (props: SortableProps) => {
-  const { children, update } = props;
+  const { children, update, dragEnd } = props;
   
-  const moveIdRef = useRef<string | null>(null)
+  const moveIdRef = useRef<string | null>(null);
   
   const onDragStart = (e: DragEvent<HTMLDivElement>) => {
     const dragId = (e.target as HTMLElement).dataset.dragId;
@@ -29,6 +30,7 @@ export const Sortable = (props: SortableProps) => {
   };
   const onDragEnd = () => {
     moveIdRef.current = null;
+    dragEnd && dragEnd();
   };
   
   const onDragOver = (e: DragEvent) => {

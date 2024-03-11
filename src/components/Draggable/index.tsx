@@ -1,5 +1,5 @@
 import type { MouseEvent as ReactMouseEvent, ReactNode } from 'react';
-import { useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 
 interface DraggableProps {
   left: number;
@@ -11,7 +11,7 @@ interface DraggableProps {
   children: ReactNode;
 }
 
-export const Draggable = (props: DraggableProps) => {
+export const Draggable = memo((props: DraggableProps) => {
   const {
     children,
     parent,
@@ -23,6 +23,14 @@ export const Draggable = (props: DraggableProps) => {
   } = props;
   const [position, setPosition] = useState({ left, top });
   const draggableRef = useRef<HTMLDivElement>(null);
+  const isDrag = useRef(false);
+  
+  useEffect(() => {
+    setPosition({
+      left,
+      top
+    });
+  }, [left, top]);
   
   const onMouseDown = (e: ReactMouseEvent) => {
     const wrapElem = document.getElementsByClassName(parent)[0];
@@ -53,6 +61,7 @@ export const Draggable = (props: DraggableProps) => {
     let moveTop = 0;
     
     const onMouseMove = (e: MouseEvent) => {
+      isDrag.current = true;
       moveLeft = (e.clientX - mousePositionLeft - 300 + wrapScrollLeft) / scale;
       moveTop = (e.clientY - mousePositionTop - 50 + wrapScrollTop) / scale;
       
@@ -68,10 +77,13 @@ export const Draggable = (props: DraggableProps) => {
         canvas.removeEventListener('mouseup', onMouseUp);
       }
       
-      mouseUp && mouseUp(id, {
-        left: moveLeft,
-        top: moveTop
-      });
+      if (isDrag.current) {
+        mouseUp && mouseUp(id, {
+          left: moveLeft,
+          top: moveTop
+        });
+        isDrag.current = false;
+      }
     };
     
     if (canvas) {
@@ -93,4 +105,4 @@ export const Draggable = (props: DraggableProps) => {
       { children }
     </div>
   );
-};
+});

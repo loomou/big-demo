@@ -48,8 +48,9 @@ interface Action {
   updateComponentProps: (props: any) => void;
   updateComponentPosition: (id: number, position: { left: number, top: number }) => void;
   updateLayer: (startId: number, overId: number) => void;
-  getHistoryRecord: (isPrev: boolean) => void;
   deleteComponent: () => void;
+  getHistoryRecord: (isPrev: boolean) => void;
+  addHistoryRecord: (components?: Component[]) => Promise<void>;
 }
 
 export const useComponents = create<State & Action>((set, get) => ({
@@ -67,13 +68,14 @@ export const useComponents = create<State & Action>((set, get) => ({
     }));
   },
   addComponent: async (component) => {
+    const { addHistoryRecord } = get();
     component = {
       ...component,
       props: DefaultPropsMap[component.name](),
       id: Date.now()
     };
     const { components } = get();
-    await dbWrapper.setHistoryRecord([...components, component]);
+    await addHistoryRecord([...components, component]);
     set({ components: [...components, component] });
   },
   updateComponentProps: (props) => {
@@ -93,29 +95,29 @@ export const useComponents = create<State & Action>((set, get) => ({
     });
   },
   updateComponentPosition: async (id, position) => {
-    const { components } = get();
+    const { components, addHistoryRecord } = get();
     const findComponent = components.find((component) => component.id === id);
     if (findComponent) {
       findComponent.position = { ...position };
     }
+    await addHistoryRecord(components);
     set({ components: [...components] });
   },
-  updateLayer: (startId, overId) => {
-    set((state) => {
-      const startIndex = state.components.findIndex((item) => item.id === startId);
-      const overIndex = state.components.findIndex((item) => item.id === overId);
-      if (startIndex > -1 && overIndex > -1) {
-        if (overIndex > startIndex) {
-          state.components.splice(overIndex + 1, 0, state.components[startIndex]);
-          state.components.splice(startIndex, 1);
-        }
-        if (overIndex < startIndex) {
-          state.components.splice(overIndex, 0, state.components[startIndex]);
-          state.components.splice(startIndex + 1, 1);
-        }
+  updateLayer: async (startId, overId) => {
+    const { components } = get();
+    const startIndex = components.findIndex((item) => item.id === startId);
+    const overIndex = components.findIndex((item) => item.id === overId);
+    if (startIndex > -1 && overIndex > -1) {
+      if (overIndex > startIndex) {
+        components.splice(overIndex + 1, 0, components[startIndex]);
+        components.splice(startIndex, 1);
       }
-      return { components: [...state.components] };
-    });
+      if (overIndex < startIndex) {
+        components.splice(overIndex, 0, components[startIndex]);
+        components.splice(startIndex + 1, 1);
+      }
+    }
+    set({ components: [...components] });
   },
   getHistoryRecord: async (isPrev) => {
     const { setCurrentComponent, setCurrentComponentId } = get();
@@ -128,18 +130,20 @@ export const useComponents = create<State & Action>((set, get) => ({
     });
   },
   deleteComponent: async () => {
-    const { currentComponentId, components } = get();
+    const { currentComponentId, components, addHistoryRecord } = get();
     if (!currentComponentId) return;
     const { setCurrentComponent, setCurrentComponentId } = get();
     const filterComponents = components.filter((component) => component.id !== currentComponentId);
-    await dbWrapper.setHistoryRecord(filterComponents);
+    await addHistoryRecord(filterComponents);
     setCurrentComponent(null);
     setCurrentComponentId(null);
     set({
       components: [...filterComponents]
     });
   },
-  addHistoryRecord: async () => {
-  
+  addHistoryRecord: async (componentsRecord) => {
+    const { components } = get();
+    console.log(components, componentsRecord);
+    await dbWrapper.setHistoryRecord(componentsRecord || components);
   }
 }));

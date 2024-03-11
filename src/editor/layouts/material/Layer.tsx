@@ -16,24 +16,24 @@ const renderIcon = (name: string) => {
 };
 
 export const Layer = () => {
-  const { components, updateLayer } = useComponents();
+  const { components, updateLayer, addHistoryRecord } = useComponents();
   
   return (
     <div>
-      <Sortable update={updateLayer}>
-        <div style={{
+      <Sortable update={ updateLayer } dragEnd={ addHistoryRecord }>
+        <div style={ {
           display: 'flex',
           flexDirection: 'column',
-        }}>
+        } }>
           {
             components.map((component) => (
               <ErrorBoundary fallback={ <div>error</div> } key={ component.id }>
                 <div
                   draggable
                   data-drag-id={ component.id }
-                  style={{
+                  style={ {
                     marginBottom: 10,
-                  }}
+                  } }
                 >
                   <Space data-drag-id={ component.id }>
                     <Card size="small">
